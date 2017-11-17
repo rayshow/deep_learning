@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4c62d192-11df-4002-9b1d-a027a82ff379}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile />
+    <SearchPath>lstm_mnist</SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>Global|PythonCore|3.6</InterpreterId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="cnn\tensorflow\insqa_cnn.py" />
+    <Compile Include="cnn\tensorflow\insqa_train.py" />
+    <Compile Include="cnn\tensorflow\insqa_w2v.py" />
+    <Compile Include="cnn\tensorflow\insurance_qa_data_helpers.py" />
+    <Compile Include="cnn\theano\insqa_cnn.py" />
+    <Compile Include="lstm_cnn\theano\insqa_lstm.py" />
+    <Compile Include="lstm_mnist\lstm_test.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="cnn\" />
+    <Folder Include="cnn\tensorflow" />
+    <Folder Include="cnn\theano" />
+    <Folder Include="lstm_cnn\" />
+    <Folder Include="lstm_cnn\theano" />
+    <Folder Include="lstm_mnist\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.6" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
