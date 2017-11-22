@@ -25,9 +25,9 @@
     <Compile Include="cnn\tensorflow\insurance_qa_data_helpers.py" />
     <Compile Include="cnn\theano\insqa_cnn.py" />
     <Compile Include="lstm_cnn\theano\insqa_lstm.py" />
-    <Compile Include="lstm_mnist\lstm_test.py">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="lstm_mnist\mnist_cnn.py" />
+    <Compile Include="lstm_mnist\mnist_lstm.py" />
+    <Compile Include="lstm_mnist\mnist_regression.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="cnn\" />

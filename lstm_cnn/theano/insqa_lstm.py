@@ -18,6 +18,7 @@ import theano.tensor as T
 from theano.tensor.signal import pool
 from theano.tensor.nnet import conv2d
 from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+theano.config.floatX = 'float32'
 
 #TODO change filepath to your local environment
 #include train test1 vectors.nobin
@@ -160,8 +161,8 @@ def validation(validate_model, testList, vocab, batch_size):
             lev1 += 1
         if flag == '0':
             lev0 += 1
-    for s in score_list:
-        of.write(str(s) + '\n')
+    #for s in score_list:
+    #    of.write(str(s) + '\n')
     of.write('lev1:' + str(lev1) + '\n')
     of.write('lev0:' + str(lev0) + '\n')
     print('lev1:' + str(lev1))
@@ -239,10 +240,9 @@ class LSTM(object):
     lookup_table = theano.shared(word_embeddings, borrow=True)
     tparams['lookup_table'] = lookup_table
     self.params += [lookup_table]
-
+     
     n_timesteps = input1.shape[0]
     n_samples = input1.shape[1]
-
     lstm1, lstm_whole1 = self._lstm_net(tparams, input1, sequence_len, batch_size, embedding_size, mask1, proj_size)
     lstm2, lstm_whole2 = self._lstm_net(tparams, input2, sequence_len, batch_size, embedding_size, mask2, proj_size)
     lstm3, lstm_whole3 = self._lstm_net(tparams, input3, sequence_len, batch_size, embedding_size, mask3, proj_size)
@@ -276,7 +276,7 @@ class LSTM(object):
         W = tparams['cnn_W_' + str(filter_size)]
         b = tparams['cnn_b_' + str(filter_size)]
         conv_out = conv2d(input=cnn_input, filters=W, filter_shape=filter_shape, input_shape=image_shape)
-        pooled_out = pool.pool_2d(input=conv_out, ds=(sequence_len - filter_size + 1, 1), ignore_border=True, mode='max')
+        pooled_out = pool.pool_2d(input=conv_out, ws=(sequence_len - filter_size + 1, 1), ignore_border=True, mode='max')
         pooled_active = T.tanh(pooled_out + b.dimshuffle('x', 0, 'x', 'x'))
         outputs.append(pooled_active)
     num_filters_total = num_filters * len(filter_sizes)
@@ -360,7 +360,7 @@ def train():
     embedding_size = 100
     learning_rate = 0.05
     n_epochs = 20000000
-    validation_freq = 1000
+    validation_freq = 100
     filter_sizes = [1, 2, 3, 5]
     num_filters = 500
 
@@ -371,6 +371,8 @@ def train():
     train_x1, train_x2, train_x3, mask1, mask2, mask3 = load_data(trainList, vocab, batch_size)
     x1, x2, x3 = T.fmatrix('x1'), T.fmatrix('x2'), T.fmatrix('x3')
     m1, m2, m3 = T.fmatrix('m1'), T.fmatrix('m2'), T.fmatrix('m3')
+    print("data load success");
+    #sequence_len is fix length of anwser
     model = LSTM(
         input1=x1, input2=x2, input3=x3,
         mask1=m1, mask2=m2, mask3=m3,
@@ -413,14 +415,16 @@ def train():
 
     epoch = 0
     done_looping = False
+    print("start loop")
     while (epoch < n_epochs) and (not done_looping):
         epoch += 1
         train_x1, train_x2, train_x3, mask1, mask2, mask3 = load_data(trainList, vocab, batch_size)
         #print('train_x1, train_x2, train_x3')
         #print(train_x1.shape, train_x2.shape, train_x3.shape)
+        print('before load data done');
         cost_ij, acc = train_model(train_x1, train_x2, train_x3, mask1, mask2, mask3)
         print('load data done ...... epoch:' + str(epoch) + ' cost:' + str(cost_ij) + ', acc:' + str(acc))
-        if epoch % validation_freq == 0:
+        if epoch % 100 == 0:
             print('Evaluation ......')
             validation(validate_model, testList, vocab, batch_size)
 
